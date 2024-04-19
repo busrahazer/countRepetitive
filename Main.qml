@@ -11,14 +11,14 @@ Window {
 
     Timer {
         id: timer
-        interval: 500 // Her 0.5 saniyede bir
+        interval: 500 // Every 0.5 seconds
         running: false
         repeat: true
 
         onTriggered: {
             // Rastgele bir sayı üret
             var randomNumber = Math.floor(Math.random() * 5) + 1;
-            console.log("Random number:", randomNumber); // Eklendi
+            console.log("Random number:", randomNumber);  // Added data
 
             var count = 1;
             if (numbersModel.count > 0 && numbersModel.get(numbersModel.count - 1).number === randomNumber) {
@@ -53,7 +53,7 @@ Window {
             Column {
                 Repeater {
                     id: repeater
-                    model: numbersModel // Model'i Repeater'a bağla
+                    model: numbersModel // Connect Model to Repeater
                     delegate: RowLayout {
                         spacing: 5
 
