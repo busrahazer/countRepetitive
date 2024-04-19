@@ -19,10 +19,17 @@ Window {
             // Rastgele bir sayı üret
             var randomNumber = Math.floor(Math.random() * 20) + 1;
             console.log("Random number:", randomNumber); // Eklendi
-            // Model'e ekle
-            numbersModel.append({number: randomNumber});
+
+            var count = 1;
+            if (numbersModel.count > 0 && numbersModel.get(numbersModel.count - 1).number === randomNumber) {
+                count = numbersModel.get(numbersModel.count - 1).count + 1;
+                numbersModel.setProperty(numbersModel.count - 1, "count", count);
+            } else {
+                numbersModel.append({number: randomNumber, count: 1});
+            }
+
             // En alta kaydır
-            flickable.contentY += scrollView.contentHeight;
+            scrollView.contentY = scrollView.contentHeight - scrollView.height;
         }
     }
 
@@ -35,33 +42,30 @@ Window {
             text: timer.running ? "Stop" : "Start"
             onClicked: {
                 timer.running = !timer.running;
-                // Başlatılırsa ScrollView'i en alta kaydır
-                if (timer.running) {
-                    flickable.contentY = flickable.contentHeight - flickable.height;
-                }
             }
         }
 
-        Flickable {
-            id: flickable
-            width: parent.width
-            height: parent.height - button.height
-            contentWidth: scrollView.width
-            contentHeight: scrollView.contentHeight
-            flickableDirection: Flickable.VerticalFlick
+        ScrollView {
+            id: scrollView
+            Layout.fillHeight: true
+            Layout.fillWidth: true
 
-            ScrollView {
-                id: scrollView
-                width: flickable.width
-                Layout.fillHeight: true
-
+            Column {
                 Repeater {
                     id: repeater
                     model: numbersModel // Model'i Repeater'a bağla
-                    delegate: Text {
-                        text: model.number // Model verisini göster
-                        font.pixelSize: 16
-                        color: "black"
+                    delegate: RowLayout {
+                        spacing: 5
+                        Text {
+                            text: model.number
+                            font.pixelSize: 16
+                            color: "black"
+                        }
+                        Text {
+                            text: "x" + model.count
+                            font.pixelSize: 16
+                            color: "black"
+                        }
                     }
                 }
             }
