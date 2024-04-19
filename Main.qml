@@ -17,7 +17,7 @@ Window {
 
         onTriggered: {
             // Rastgele bir sayı üret
-            var randomNumber = Math.floor(Math.random() * 20) + 1;
+            var randomNumber = Math.floor(Math.random() * 5) + 1;
             console.log("Random number:", randomNumber); // Eklendi
 
             var count = 1;
@@ -56,15 +56,19 @@ Window {
                     model: numbersModel // Model'i Repeater'a bağla
                     delegate: RowLayout {
                         spacing: 5
+
+                        Text {
+                            text: " "
+                        }
                         Text {
                             text: model.number
                             font.pixelSize: 16
-                            color: "black"
+                            color: "#53BD32"
                         }
                         Text {
-                            text: "x" + model.count
+                            text: model.count > 1 ? "|" + " " + model.count : ""
                             font.pixelSize: 16
-                            color: "black"
+                            color: "#53BD32"
                         }
                     }
                 }
