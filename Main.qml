@@ -9,10 +9,6 @@ Window {
     height: 400
     title: "Number Flow"
 
-    ListModel {
-        id: numbersModel
-    }
-
     Timer {
         id: timer
         interval: 500 // Her 0.5 saniyede bir
@@ -23,10 +19,10 @@ Window {
             // Rastgele bir sayı üret
             var randomNumber = Math.floor(Math.random() * 20) + 1;
             console.log("Random number:", randomNumber); // Eklendi
-            // ScrollView'e ekle
-            column.addItem({number: randomNumber});
+            // Model'e ekle
+            numbersModel.append({number: randomNumber});
             // En alta kaydır
-            scrollView.contentItem.children[0].y += scrollView.contentHeight;
+            flickable.contentY += scrollView.contentHeight;
         }
     }
 
@@ -41,24 +37,38 @@ Window {
                 timer.running = !timer.running;
                 // Başlatılırsa ScrollView'i en alta kaydır
                 if (timer.running) {
-                    scrollView.contentItem.children[0].y += scrollView.contentHeight;
+                    flickable.contentY = flickable.contentHeight - flickable.height;
                 }
             }
         }
 
-        ScrollView {
-            id: scrollView
-            Layout.fillHeight: true
-            Layout.fillWidth: true
+        Flickable {
+            id: flickable
+            width: parent.width
+            height: parent.height - button.height
+            contentWidth: scrollView.width
+            contentHeight: scrollView.contentHeight
+            flickableDirection: Flickable.VerticalFlick
 
-            Repeater {
-                model: numbersModel // Değişiklik yapıldı
-                delegate: Text {
-                    text: modelData.number // Sıradaki model verisini göster
-                    font.pixelSize: 16
-                    color: "black"
+            ScrollView {
+                id: scrollView
+                width: flickable.width
+                Layout.fillHeight: true
+
+                Repeater {
+                    id: repeater
+                    model: numbersModel // Model'i Repeater'a bağla
+                    delegate: Text {
+                        text: model.number // Model verisini göster
+                        font.pixelSize: 16
+                        color: "black"
+                    }
                 }
             }
         }
+    }
+
+    ListModel {
+        id: numbersModel
     }
 }
